@@ -14,7 +14,6 @@
 #    Mostrar la lista de clientes preferentes de la base de datos con su NIF y nombre.
 #    Terminar el programa.
 
-"""
 def pedirNif():
     nif = input("Introduce un NIF: ")
     return nif
@@ -42,9 +41,8 @@ def pedirPreferente():
     else:
         return False
     
-def aniadirUsuario(lista_usuarios: dict):
-    datos = []
-    nif = pedirNif()
+def pedirDatos():
+    datos = []    
     nombre = pedirNombre()
     direccion = pedirDireccion()
     telefono = pedirTelefono()
@@ -56,49 +54,75 @@ def aniadirUsuario(lista_usuarios: dict):
     datos.append({"telefono": telefono})
     datos.append({"correo": correo})
     datos.append({"preferente": preferente})
+    return datos
     
+def aniadirUsuario(lista_usuarios: dict, nif: str, datos: list):
     lista_usuarios[nif] = datos
-    
-def eliminarCliente(lista_usuarios: dict):
-    nif = pedirNif()
+    return lista_usuarios
+
+def comprobarUsuario(lista_usuarios: dict, nif: str):
     if nif in lista_usuarios:
-        del lista_usuarios[nif]
         return True
     else:
         return False
 
-def buscarCliente(lista_usuarios: dict):
-    nif = pedirNif()
-    if nif in lista_usuarios:
-        return {nif}, {lista_usuarios[nif]}
-    
-def buscarClientePreferente(lista_usuarios: dict):
-    usuarios_preferentes = {}
-    for cliente in lista_usuarios:
-        if lista_usuarios[cliente]["preferente"]:
-            usuarios_preferentes[lista_usuarios.keys[cliente]] = lista_usuarios[cliente]
-    return usuarios_preferentes
+def eliminarCliente(lista_usuarios: dict, nif: str):
+    del lista_usuarios[nif]
+    return lista_usuarios
 
+def buscarCliente(lista_usuarios: dict, nif: str):
+    if nif in lista_usuarios:
+        return f"{nif} {lista_usuarios[nif]}"
+    
+def imprimirUsuarios(lista_usuarios: dict):
+    for usuario in lista_usuarios:
+        print(f"{usuario} {lista_usuarios[usuario]}")
+
+def usuariosPreferente(lista_usuarios):
+    usuarios_preferentes = {}
+    for usuario in lista_usuarios:
+        if lista_usuarios[usuario][4]["preferente"] == True:
+            usuarios_preferentes[usuario] = lista_usuarios[usuario]
+    return usuarios_preferentes
+        
 def menu():
     
-    entrada = input("(1) Añadir cliente\n(2) Eliminar cliente\n(3) Mostrar cliente\n(4) Listar todos los clientes\n(5) Listar clientes preferentes\n(6) Terminar\n")
-    if entrada == "1":
-        aniadirUsuario()
-    elif entrada == "2":
-        eliminarCliente()
-    elif entrada == "3":
-        if buscarCliente() == None:
-            print("No exixte este cliente")
-        else:
-            print(buscarCliente())
-    elif entrada == "4":
-        #todo: mostrar clientes
-    elif entrada == "5":
+    usuarios = {}
+    
+    entrada = input("(1) Añadir cliente\n(2) Eliminar cliente\n(3) Mostrar cliente\n(4) Listar todos los clientes\n(5) Listar clientes preferentes\n(6) Terminar\n> ")
+    while entrada != "6":
+        if entrada == "1":
+            nif = pedirNif()
+            if comprobarUsuario(usuarios, nif):
+                print("El usuario ya existe.")
+            else:
+                datos = pedirDatos()
+                aniadirUsuario(usuarios, nif, datos)    
+        elif entrada == "2":
+            nif = pedirNif()
+            if comprobarUsuario(usuarios, nif):
+                eliminarCliente(usuarios, nif)
+            else:
+                print("El usuario no existe.")
+            
+        elif entrada == "3":
+            nif = pedirNif()
+            if buscarCliente(usuarios, nif) == None:
+                print("No existe este cliente")
+            else:
+                print(buscarCliente(usuarios, nif))
         
-
-    #dic = {"fds": 45, "hbj" : 56}
-
-#print(dic["fds"])ç
-
-menu()
-"""
+        elif entrada == "4":
+            imprimirUsuarios(usuarios)
+            
+        elif entrada == "5":
+            usuarios_preferentes = usuariosPreferente(usuarios)
+            imprimirUsuarios(usuarios_preferentes)
+            
+        else:
+            print("Entrada invalida.")        
+        
+        entrada = input("(1) Añadir cliente\n(2) Eliminar cliente\n(3) Mostrar cliente\n(4) Listar todos los clientes\n(5) Listar clientes preferentes\n(6) Terminar\n> ")
+        
+if __name__ == '__main__':
+    menu()
