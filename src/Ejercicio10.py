@@ -42,21 +42,22 @@ def pedirPreferente():
         return False
     
 def pedirDatos():
-    datos = []    
+    datos = {}    
     nombre = pedirNombre()
     direccion = pedirDireccion()
     telefono = pedirTelefono()
     correo = pedirCorreo()
     preferente = pedirPreferente()
         
-    datos.append({"nombre": nombre})
-    datos.append({"direccion": direccion})
-    datos.append({"telefono": telefono})
-    datos.append({"correo": correo})
-    datos.append({"preferente": preferente})
-    return datos
+    datos["nombre"] = nombre
+    datos["direccion"] = direccion
+    datos["telefono"] = telefono
+    datos["correo"] = correo
+    datos["preferente"] = preferente
     
-def aniadirUsuario(lista_usuarios: dict, nif: str, datos: list):
+    return datos
+        
+def aniadirUsuario(lista_usuarios: dict, nif: str, datos: dict):
     lista_usuarios[nif] = datos
     return lista_usuarios
 
@@ -81,7 +82,7 @@ def imprimirUsuarios(lista_usuarios: dict):
 def usuariosPreferente(lista_usuarios):
     usuarios_preferentes = {}
     for usuario in lista_usuarios:
-        if lista_usuarios[usuario][4]["preferente"] == True:
+        if lista_usuarios[usuario]["preferente"] == True:
             usuarios_preferentes[usuario] = lista_usuarios[usuario]
     return usuarios_preferentes
         
